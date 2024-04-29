@@ -5,8 +5,9 @@ const cors = require('cors');
 const blogRouter = require("./routes/blogs");
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+
+app.use(cors());
 
 const PORT = 5555;
 
