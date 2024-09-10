@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(morgan('common'));
 
 app.use(cors({
-    origins: ["http://localhost:5173", "https://myhub-s861.onrender.com","http://localhost:5174"],
+    origins: ["http://localhost:5173", "https://myhub-s861.onrender.com", "http://localhost:5174"],
 }));
 
 const PORT = process.env.PORT || 3000;
