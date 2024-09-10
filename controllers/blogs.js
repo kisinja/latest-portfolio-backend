@@ -1,4 +1,4 @@
-const {blog}  = require("../models/blogModel");
+const { blog } = require("../models/blogModel");
 
 
 const getBlogs = async (req, res) => {

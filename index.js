@@ -1,19 +1,23 @@
+require('dotenv').config();
 const express = require('express');
 const { connectdb } = require("./db");
 const cors = require('cors');
+const morgan = require('morgan');
 
 const blogRouter = require("./routes/blogs");
+const messageRouter = require("./routes/messages");
 
 const app = express();
 app.use(express.json());
+app.use(morgan('common'));
 
 app.use(cors());
 
-const PORT = 5555;
+const PORT = process.env.PORT || 3000;
 
-const startServer = async () => {
+const startServer = () => {
     try {
-        await connectdb();
+        connectdb();
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
@@ -22,7 +26,8 @@ const startServer = async () => {
     }
 };
 
-app.use("/api",blogRouter);
+app.use("/api/blogs", blogRouter);
+app.use("/api/messages", messageRouter);
 
 startServer();
 
