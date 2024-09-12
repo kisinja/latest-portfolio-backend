@@ -1,4 +1,5 @@
 const Blog = require("../models/Blog");
+const { sanitizeContent } = require("../utils/sanitize");
 
 const getBlogs = async (req, res) => {
     const qNew = req.query.new;
@@ -15,7 +16,7 @@ const getBlogs = async (req, res) => {
                 },
             });
         } else {
-            blogs = await Blog.find().limit(3);
+            blogs = await Blog.find().limit(6);
         }
 
         res.status(200).json(blogs);
@@ -34,10 +35,13 @@ const createBlog = async (req, res) => {
             return res.status(400).send({ error: "Please provide all the fields" });
         }
 
+        // Sanitize the content before saving it to the database
+        const sanitizedContent = sanitizeContent(content);
+
         const newBlog = {
             title,
             imgUrl,
-            content,
+            content: sanitizeContent,
             author,
             category
         };
