@@ -15,7 +15,7 @@ const getBlogs = async (req, res) => {
                 },
             });
         } else {
-            products = await Blog.find();
+            blogs = await Blog.find();
         }
 
         res.status(200).json(blogs);
