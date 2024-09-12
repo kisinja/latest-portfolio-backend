@@ -1,19 +1,29 @@
 const Blog = require("../models/Blog");
 
 const getBlogs = async (req, res) => {
+    const qNew = req.query.new;
+    const qCategory = req.query.category;
     try {
-        const blogs = await Blog.find().sort({ createdAt: -1 });
+        let blogs;
 
-        if (blogs) {
-            return res.send(blogs).status(200);
+        if (qNew) {
+            blogs = await Blog.find().sort({ createdAt: -1 });
+        } else if (qCategory) {
+            blogs = await Blog.find({
+                category: {
+                    $in: [qCategory],
+                },
+            });
         } else {
-            return res.status(404).send({ "message": "No blogs found" });
+            products = await Blog.find();
         }
+
+        res.status(200).json({ "Blog Count": blogs.length, "blogs": blogs });
     } catch (error) {
         console.error(error.message);
         res.status(500).send({ "message": "Internal Server Error" });
     }
-}
+};
 
 const createBlog = async (req, res) => {
     try {
