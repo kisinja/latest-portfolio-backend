@@ -18,7 +18,7 @@ const getBlogs = async (req, res) => {
             products = await Blog.find();
         }
 
-        res.status(200).json({ "Blog Count": blogs.length, "blogs": blogs });
+        res.status(200).json(blogs);
     } catch (error) {
         console.error(error.message);
         res.status(500).send({ "message": "Internal Server Error" });
