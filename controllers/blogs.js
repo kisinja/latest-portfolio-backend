@@ -1,9 +1,8 @@
-const { blog } = require("../models/blogModel");
-
+const Blog = require("../models/Blog");
 
 const getBlogs = async (req, res) => {
     try {
-        const blogs = await blog.find();
+        const blogs = await Blog.find();
 
         if (blogs) {
             return res.send(blogs).status(200);
@@ -18,25 +17,31 @@ const getBlogs = async (req, res) => {
 
 const createBlog = async (req, res) => {
     try {
-        if (!req.body.title || !req.body.imgUrl || !req.body.content || !req.body.author || !req.body.category) {
-            return res.status(400).send({ "message": "Please provide all the fields" });
-        } else {
-            const newBlog = {
-                title: req.body.title,
-                imgUrl: req.body.imgUrl,
-                content: req.body.content,
-                author: req.body.author,
-                category: req.body.category
-            }
-            const blogCreated = await blog.create(newBlog);
+        const { title, content, author, category } = req.body;
+        // If using a file upload, the imgUrl would come from req.file
+        const imgUrl = req.file ? req.file.path : req.body.imgUrl;
 
-            return res.status(201).send(blogCreated);
+        if (!title || !imgUrl || !content || !author || !category) {
+            return res.status(400).send({ error: "Please provide all the fields" });
         }
+
+        const newBlog = {
+            title,
+            imgUrl,
+            content,
+            author,
+            category
+        };
+
+        const blogCreated = await Blog.create(newBlog);
+
+        return res.status(201).json({ blog: blogCreated });
     } catch (error) {
         console.error(error.message);
-        res.status(500).send({ "message": "Internal Server Error" });
+        return res.status(500).send({ error: error.message });
     }
 };
+
 
 const updateBlog = async (req, res, id) => {
     try {
@@ -44,7 +49,7 @@ const updateBlog = async (req, res, id) => {
             return res.status(400).send({ "message": "Please provide all the fields" });
         } else {
             const id = req.params.id;
-            const blogToUpdate = await blog.findById(id);
+            const blogToUpdate = await Blog.findById(id);
 
             const updatedBlog = {
                 blogToUpdate,
@@ -55,8 +60,23 @@ const updateBlog = async (req, res, id) => {
         };
     } catch (error) {
         console.error(error.message);
-        res.status(500).send({ "message": "Failed to update blog" });
+        return res.status(500).send({ error: error.message });
     }
 };
 
-module.exports = { getBlogs, createBlog, updateBlog };
+const getBlogById = async (req, res) => {
+    const blogId = req.params.id;
+    try {
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            return res.json({ error: "No such blog was found" }).status(400);
+        }
+
+        res.status(200).json(blog);
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ error: error.message });
+    }
+};
+
+module.exports = { getBlogs, createBlog, updateBlog, getBlogById };

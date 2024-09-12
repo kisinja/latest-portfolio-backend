@@ -36,3 +36,7 @@ startServer();
 app.get("/", (req, res) => {
     res.send({ "message": "Hello World!" });
 });
+
+
+// Make the 'uploads' directory publicly accessible
+app.use('/uploads', express.static('uploads'));
