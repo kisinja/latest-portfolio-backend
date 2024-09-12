@@ -18,7 +18,6 @@ const getBlogs = async (req, res) => {
 const createBlog = async (req, res) => {
     try {
         const { title, content, author, category } = req.body;
-        // If using a file upload, the imgUrl would come from req.file
         const imgUrl = req.file ? req.file.path : req.body.imgUrl;
 
         if (!title || !imgUrl || !content || !author || !category) {
@@ -78,4 +77,24 @@ const getBlogById = async (req, res) => {
     }
 };
 
-module.exports = { getBlogs, createBlog, updateBlog, getBlogById };
+const getBlogsByCategory = async (req, res) => {
+    const category = req.query.category; // Get the category from query parameters
+
+    if (!category) {
+        return res.status(400).json({ error: "Category query parameter is required" });
+    }
+
+    try {
+        const blogs = await Blog.find({ category: category });
+        if (blogs.length === 0) {
+            return res.status(404).json({ message: "No blogs found for the specified category" });
+        }
+
+        return res.status(200).json(blogs);
+    } catch (error) {
+        console.error(error.message);
+        return res.status(500).send({ error: error.message });
+    }
+};
+
+module.exports = { getBlogs, createBlog, updateBlog, getBlogById, getBlogsByCategory };

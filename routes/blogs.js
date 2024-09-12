@@ -1,5 +1,5 @@
 const express = require('express');
-const { getBlogs, createBlog, updateBlog, getBlogById } = require("../controllers/blogs.js");
+const { getBlogs, createBlog, updateBlog, getBlogById,getBlogsByCategory } = require("../controllers/blogs.js");
 
 const upload = require("../utils/multerConfig");
 
@@ -9,5 +9,6 @@ router.get("/", getBlogs);
 router.post("/", upload.single('imgUrl'), createBlog);
 router.put("/:id", updateBlog);
 router.get("/:id", getBlogById);
+router.get("/related", getBlogsByCategory);
 
 module.exports = router;
