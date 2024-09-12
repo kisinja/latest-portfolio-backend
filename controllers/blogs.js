@@ -2,7 +2,7 @@ const Blog = require("../models/Blog");
 
 const getBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find();
+        const blogs = await Blog.find().limit(3);
 
         if (blogs) {
             return res.send(blogs).status(200);
