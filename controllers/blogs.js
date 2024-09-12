@@ -2,7 +2,7 @@ const Blog = require("../models/Blog");
 
 const getBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find().limit(3);
+        const blogs = await Blog.find().sort({ createdAt: -1 });
 
         if (blogs) {
             return res.send(blogs).status(200);
@@ -41,7 +41,6 @@ const createBlog = async (req, res) => {
         return res.status(500).send({ error: error.message });
     }
 };
-
 
 const updateBlog = async (req, res, id) => {
     try {
